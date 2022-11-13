@@ -7,12 +7,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
     <link rel="stylesheet" href="../RodWeatherApp/style.css">
+    <script src="https://kit.fontawesome.com/057d435fa0.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
 
-    <input type="text" id="userInput">
-    <button id="search">Search</button>
+    <div class="card">
+
+        <div class="searchArea">
+            <input type="text" id="userInput" placeholder="Search for city, country...">
+            <button id="search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+
+        <div class="weatherInfo">
+            <h2 class="city">Weather in City</h2>
+            <h1 class="temp">24&#8451;</h1>
+            <img src="" alt="" class="icon"></img>
+            <div class="description">Sunny</div>
+            <div class="humidity">Humidity: 50%</div>
+            <div class="wind">Wind speed: 5 km/h</div>
+
+        </div>
+
+    </div>
 
     <script type='text/javascript' src='../RodWeatherApp/config.js'></script>
     <script src="../RodWeatherApp/script.js"></script>
