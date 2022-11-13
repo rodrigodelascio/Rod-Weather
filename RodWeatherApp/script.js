@@ -1,5 +1,8 @@
 const search = document.getElementById("search");
-const userInput = document.getElementById("userInput")
+const userInput = document.getElementById("userInput");
+
+let apiKey = config.apiWeatherKey;
+let clientID = config.clientUnsplash;
 
 search.addEventListener("click", () => {
     requestWeather();
@@ -16,7 +19,6 @@ userInput.addEventListener('keydown', function(event){
 })
 
 let requestWeather = () => {
-    let apiKey = "67e6e153344aac21e4be651c36a0b105"
 
     let city = String(userInput.value)
 
@@ -34,7 +36,6 @@ let requestWeather = () => {
 }
 
 let requestImg = () => {
-    let clientID = "LKo9uugJ9aD3IIZIaiuSuYBEcEsRaE9CoMgM94vJJEM"
 
     let userSearch = String(userInput.value)
 
