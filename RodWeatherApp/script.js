@@ -1,5 +1,7 @@
 const search = document.getElementById("search");
 const userInput = document.getElementById("userInput");
+const backgroundImg = document.getElementsByTagName("body")
+const cityWeather = document.getElementsByClassName("cityWeather")
 
 let apiKey = config.apiWeatherKey;
 let clientID = config.clientUnsplash;
@@ -9,13 +11,13 @@ search.addEventListener("click", () => {
     requestImg();
 })
 
-userInput.addEventListener('keydown', function(event){
-    if(event.key != 'Enter')
-    return false
+userInput.addEventListener('keydown', function (event) {
+    if (event.key != 'Enter')
+        return false
 
     else
-    requestWeather();
-    requestImg();    
+        requestWeather();
+    requestImg();
 })
 
 let requestWeather = () => {
@@ -26,13 +28,24 @@ let requestWeather = () => {
 
     fetch(url)
 
-    .then(response => {
-        return response.json()
-    })
+        .then(response => {
+            return response.json()
+        })
 
         .then(data => {
-            console.log(data)
+            displayWeather(data)
         })
+
+    let displayWeather = (data) => {
+        const { name } = data;
+        const { icon, description } = data.weather[0];
+        const { temp, humidity } = data.main;
+        const { speed } = data.wind;
+
+        console.log(name, icon, description, temp, humidity, speed)
+
+        
+    }
 }
 
 let requestImg = () => {
@@ -43,12 +56,11 @@ let requestImg = () => {
 
     fetch(urlImg)
 
-    .then(response => {
-          return response.json()
-    })
+        .then(response => {
+            return response.json()
+        })
 
-    .then(data => {
-        console.log(data)
-
-    })
+        .then(data => {
+            console.log(data)
+        })
 }

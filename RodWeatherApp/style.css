@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600&display=swap');
+
+html {
+    font-family: 'Urbanist', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: aquamarine;
+}
+
+.card {
+    background: #0F0F0Fd0;
+    color: #FAF9F6;
+    padding: 2rem;
+    border-radius: 2rem;
+    width: 100%;
+    max-width: 420px;
+    margin: 2rem;
+}
+
+.searchArea {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.searchArea button {
+    margin: 0.5rem;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    height: 1.8rem;
+    width: 1.8rem;
+    font-size: 70%;
+    color: #FAF9F6;
+    background: #f7f7f72b;
+    transition: all 0.2s ease-in-out;
+}
+
+.searchArea button:hover {
+    cursor: pointer;
+    box-shadow: 0 0 0.2rem #FAF9F62b;
+    border: 0.1rem solid #FAF9F62b;
+    background-color: #f7f7f74b;
+}
+
+.searchArea input {
+    border: none;
+    outline: none;
+    padding: 0.5rem 1rem;
+    border-radius: 1.5rem;
+    background: #f7f7f72b;
+    color: #FAF9F6;
+    font-family: inherit;
+    font-size: 100%;
+    width: calc(100% - 3rem);
+    transition: all 0.2s ease-in-out;
+}
+
+::placeholder {
+    color: #FAF9F6;
+    opacity: 50%;
+}
+
+.searchArea input:focus{
+    box-shadow: 0 0 0.2rem #FAF9F64b;
+    border: 0.1rem solid #FAF9F64b;
+}
+
+.temp {
+    margin: 0;
+}
+
+.description,
+.humidity,
+.wind {
+    line-height: 1.4rem;
+}
