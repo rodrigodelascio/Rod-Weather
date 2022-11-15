@@ -27,7 +27,7 @@ userInput.addEventListener('keydown', function (event) {
 })
 
 let requestWeather = () => {
-    
+
     let city = String(userInput.value)
 
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
