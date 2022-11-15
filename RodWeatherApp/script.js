@@ -1,7 +1,12 @@
 const search = document.getElementById("search");
 const userInput = document.getElementById("userInput");
 const backgroundImg = document.getElementsByTagName("body")
-const cityWeather = document.getElementsByClassName("cityWeather")
+const cityWeather = document.getElementById("cityWeather")
+const tempDisp = document.getElementById("tempDisp")
+const iconDisp = document.getElementById("iconDisp")
+const descriptionDisp = document.getElementById("descriptionDisp")
+const humidDisp = document.getElementById("humidDisp")
+const windDisp = document.getElementById("windDisp")
 
 let apiKey = config.apiWeatherKey;
 let clientID = config.clientUnsplash;
@@ -17,7 +22,7 @@ userInput.addEventListener('keydown', function (event) {
 
     else
         requestWeather();
-    requestImg();
+        requestImg();
 })
 
 let requestWeather = () => {
@@ -36,15 +41,22 @@ let requestWeather = () => {
             displayWeather(data)
         })
 
+        .catch(error => console.log(error))
+
     let displayWeather = (data) => {
-        const { name } = data;
-        const { icon, description } = data.weather[0];
-        const { temp, humidity } = data.main;
-        const { speed } = data.wind;
+        const { name } = data
+        const { icon, description } = data.weather[0]
+        const { temp, humidity } = data.main
+        const { speed } = data.wind
 
-        console.log(name, icon, description, temp, humidity, speed)
+        const tempInt = Math.floor(temp)
 
-        
+        cityWeather.textContent = `Weather in ${name}`
+        tempDisp.textContent = `${tempInt}° C`
+        descriptionDisp.textContent = `${description}`
+        humidDisp.textContent = `Humidity: ${humidity}%`
+        windDisp.textContent = `Wind speed: ${speed} km/h`
+        iconDisp.src = `http://openweathermap.org/img/wn/${icon}.png`
     }
 }
 
@@ -52,7 +64,7 @@ let requestImg = () => {
 
     let userSearch = String(userInput.value)
 
-    let urlImg = `https://api.unsplash.com/search/photos?client_id=${clientID}&query=${userSearch}city`
+    let urlImg = `https://api.unsplash.com/search/photos?client_id=${clientID}&query=${userSearch}`
 
     fetch(urlImg)
 
@@ -63,4 +75,7 @@ let requestImg = () => {
         .then(data => {
             console.log(data)
         })
+    
+        // backgroundImg.style.backgroundImage = `url(${data.results[0].urls.raw})`;
+
 }
