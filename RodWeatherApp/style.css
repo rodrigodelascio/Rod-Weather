@@ -89,6 +89,38 @@ body {
     border: 0.1rem solid #FAF9F64b;
 }
 
+#autocomp ul {
+    list-style: none;
+    padding: unset;
+    margin-top: -0.35rem;
+    margin-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+}
+
+#autocomp button {
+    border: unset;
+    background: #FAF9F6;
+    padding: 0.4rem;
+    cursor: pointer;
+    font-style: inherit;
+    color: #545454;
+    display: block;
+    width: 100%;
+    text-align: left;
+}
+
+#autocomp li {
+    border: 0.1rem #FAF9F64b solid;
+    border-top: unset;
+    width: 20.7rem;
+}
+
+#autocomp button:hover {
+    background: #d7d7d7;
+}
+
 #tempDisp {
     margin: 0;
     margin-bottom: 0.5rem;

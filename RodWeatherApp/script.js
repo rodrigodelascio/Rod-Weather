@@ -11,6 +11,15 @@ const feelLike = document.getElementById("feelLike")
 
 let apiKey = config.apiWeatherKey;
 let clientID = config.clientUnsplash;
+let geoKey = config.geoDBKey;
+
+function debounce(func, timeout = 1000){
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
+}
 
 search.addEventListener("click", () => {
     requestWeather();
@@ -18,7 +27,7 @@ search.addEventListener("click", () => {
 })
 
 userInput.addEventListener('keydown', function (event) {
-    if (event.key != 'Enter')
+    if (event.key !== 'Enter')
         return false
 
     else
@@ -26,9 +35,18 @@ userInput.addEventListener('keydown', function (event) {
         requestImg();
 })
 
+userInput.addEventListener('keyup', function (event) {
+    
+    if (event.key == ("AltLeft" || "AltRight" || "CapsLock" || "ContextMenu" || "ControlLeft" || "ControlRight" || "MetaLeft" || "MetaRight" || "ShiftLeft" || "Space" || "Tab"))
+        return false
+        
+    else
+        requestCityList();
+})
+
 let requestWeather = () => {
 
-    let city = String(userInput.value)
+    let city = userInput.value
 
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
 
@@ -66,7 +84,10 @@ let requestWeather = () => {
 
 let requestImg = () => {
 
-    let userSearch = String(userInput.value)
+    let userSearch = userInput.value
+    
+    if (userSearch.includes(",")) 
+    userSearch = userSearch.slice(0, -4)
 
     let urlImg = `https://api.unsplash.com/search/photos?client_id=${clientID}&query=${userSearch}&orientation=landscape`
 
@@ -86,5 +107,80 @@ let requestImg = () => {
         const { raw } = data.results[randNumber].urls
 
         backgroundImg.src = `${raw}`;
+    }
+}
+
+let requestCityList = () => {
+    const options = {
+        method: 'GET',
+        headers: {
+            'X-RapidAPI-Key': geoKey,
+            'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
+        }
+    };
+    
+    let searchURL = `?limit=5&offset=0&namePrefix=${userInput.value}&sort=-population`
+
+    fetch('https://wft-geo-db.p.rapidapi.com/v1/geo/cities'+searchURL, options)
+    
+    .then(response => {
+        return response.json()
+    })
+
+    .then(data => {
+        dispCity(data)
+    })
+
+    let dispCity = (data) => {
+        // const { city, countryCode } = data.data[0]
+        // const { href } = data.links[0];
+
+        removeDrop();
+
+        let cityNames = []
+
+        cityNames = data.data.map((myCity) => {
+            return myCity.city + ", " + myCity.countryCode;
+        })
+
+        console.log(cityNames)
+
+        createDrop(cityNames);
+    }
+
+    let createDrop = (list) => {
+        const listEl = document.createElement("ul");
+        listEl.className = "autocompleteList";
+        listEl.id = "autocompleteList";
+
+        list.forEach((oneCity) => {
+            const listItem = document.createElement("li");
+            const cityButton = document.createElement("button");
+
+            cityButton.innerHTML = oneCity;
+            cityButton.addEventListener("click", onButtonClick)
+            listItem.appendChild(cityButton);
+
+            listEl.appendChild(listItem);
+        })
+
+        const autocomp = document.getElementById("autocomp");
+        autocomp.appendChild(listEl);
+
+        if (userInput.value.trim().length === 0)
+            listEl.style.display = "none"
+    }
+
+    let removeDrop = () => {
+        const listEl = document.getElementById("autocompleteList");
+        if (listEl)
+            listEl.remove();
+    }
+
+    function onButtonClick(e) {
+        const buttonEl = e.target;
+        userInput.value = buttonEl.textContent.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+        removeDrop();
     }
 }
