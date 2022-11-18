@@ -30,12 +30,12 @@ body {
 }
 
 .card {
-    background: #545454d0;
+    background: #202020e6;
     color: #FAF9F6;
     padding: 2rem;
     border-radius: 2rem;
     width: 100%;
-    max-width: 420px;
+    max-width: 430px;
     margin: 2rem;
     z-index: 2;
 }
@@ -46,14 +46,68 @@ body {
     justify-content: center;
 }
 
+#tooltip {
+    position: relative;
+    display: flex;
+}
+
+#tooltipTextOne,
+#tooltipTextTwo {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    background-color: #545454;
+    color: #FAF9F6;
+    letter-spacing: 0.03rem;
+    white-space: nowrap;
+    padding: 10px;
+    border-radius: 30px;
+    font-size: 12px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+#tooltipTextOne::before,
+#tooltipTextTwo::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translateX(-50%);
+    border: 10px solid;
+    border-color: #545454 #0000 #0000 #0000;
+}
+
+#tooltipTextOne {
+    top: -110%;
+    left: 25%;
+}
+
+#tooltipTextTwo {
+    top: -110%;
+    left: 75%;
+}
+
+#search:hover + #tooltipTextOne {
+    visibility: visible;
+    opacity: 1;
+}
+
+#geoLocRequest:hover + #tooltipTextTwo {
+    visibility: visible;
+    opacity: 1;
+}
+
 .searchArea button {
-    margin: 0.5rem;
+    margin: 0.3rem;
     border-radius: 50%;
     border: none;
     outline: none;
-    height: 2rem;
-    width: 2rem;
-    font-size: 70%;
+    height: 2.1rem;
+    width: 2.1rem;
+    font-size: 75%;
     color: #FAF9F6;
     background: #f7f7f72b;
     transition: all 0.2s ease-in-out;
@@ -61,16 +115,17 @@ body {
 
 .searchArea button:hover {
     cursor: pointer;
-    box-shadow: 0 0 0.2rem #FAF9F62b;
-    border: 0.1rem solid #FAF9F62b;
+    box-shadow: 0 0 2px #FAF9F62b;
+    border: 1px solid #FAF9F62b;
     background-color: #f7f7f74b;
 }
 
 .searchArea input {
     border: none;
     outline: none;
+    margin-right: 0.3rem;
     padding: 0.5rem 1rem;
-    border-radius: 1.5rem;
+    border-radius: 50px;
     background: #f7f7f72b;
     color: #FAF9F6;
     font-family: inherit;
@@ -85,56 +140,64 @@ body {
 }
 
 .searchArea input:focus {
-    box-shadow: 0 0 0.2rem #FAF9F64b;
-    border: 0.1rem solid #FAF9F64b;
+    box-shadow: 0 0 2px #FAF9F64b;
+    border: 1px solid #FAF9F64b;
 }
 
 #autocomp ul {
     list-style: none;
     padding: unset;
-    margin-top: -0.35rem;
+    margin-top: -15.8rem;
     margin-left: 1.2rem;
     display: flex;
     flex-direction: column;
     position: fixed;
+    border: none;
 }
 
 #autocomp button {
-    border: unset;
+    border: 1px solid #545454;
     background: #FAF9F6;
     padding: 0.4rem;
     cursor: pointer;
-    font-style: inherit;
     color: #545454;
     display: block;
+    position: relative;
     width: 100%;
     text-align: left;
+    margin-bottom: -3px;
 }
 
 #autocomp li {
-    border: 0.1rem #FAF9F64b solid;
-    border-top: unset;
-    width: 20.7rem;
+    border: none;
+    width: 19.4rem;
 }
 
 #autocomp button:hover {
     background: #d7d7d7;
 }
 
+#cityWeather {
+    letter-spacing: 0.03rem;
+}
+
 #tempDisp {
     margin: 0;
     margin-bottom: 0.5rem;
+    letter-spacing: 0.1rem;
 }
 
 #descriptionDisp {
     line-height: 1.4rem;
     text-transform: capitalize;
+    letter-spacing: 0.04rem;
 }
 
 #humidDisp,
 #windDisp,
 #feelLike {
     line-height: 1.8rem;
+    letter-spacing: 0.04rem;
 }
 
 .flexDesc {
@@ -142,3 +205,64 @@ body {
     align-items: center;
     margin-left: -0.5rem;
 }
+
+/* Loading starts */
+
+.lds-ripple {
+    display: flex;
+    margin: auto;
+    position: relative;
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+    width: 80px;
+    height: 80px;
+    resize: both;
+}
+
+.lds-ripple div {
+    position: absolute;
+    border: 4px solid #FAF9F6;
+    opacity: 1;
+    border-radius: 50%;
+    animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+.lds-ripple div:nth-child(2) {
+    animation-delay: -0.5s;
+}
+
+@keyframes lds-ripple {
+    0% {
+        top: 36px;
+        left: 36px;
+        width: 0;
+        height: 0;
+        opacity: 0;
+    }
+
+    4.9% {
+        top: 36px;
+        left: 36px;
+        width: 0;
+        height: 0;
+        opacity: 0;
+    }
+
+    5% {
+        top: 36px;
+        left: 36px;
+        width: 0;
+        height: 0;
+        opacity: 1;
+    }
+
+    100% {
+        top: 0px;
+        left: 0px;
+        width: 72px;
+        height: 72px;
+        opacity: 0;
+    }
+}
+
+/* Loading ends */

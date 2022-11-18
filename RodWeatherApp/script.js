@@ -8,22 +8,46 @@ const descriptionDisp = document.getElementById("descriptionDisp")
 const humidDisp = document.getElementById("humidDisp")
 const windDisp = document.getElementById("windDisp")
 const feelLike = document.getElementById("feelLike")
+const geoLocRequest = document.getElementById("geoLocRequest")
+const loadIcon = document.getElementById("loadIcon")
+const weatherData = document.getElementById("weatherData")
 
 let apiKey = config.apiWeatherKey;
 let clientID = config.clientUnsplash;
 let geoKey = config.geoDBKey;
 
-function debounce(func, timeout = 1000){
-    let timer;
-    return (...args) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => { func.apply(this, args); }, timeout);
-    };
+const debounce = (f, ms) => {
+    let timeout;
+
+    return () => {
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+
+        timeout = setTimeout(() => {
+            f();
+        }, ms);
+    }
 }
+
+loadIcon.style.display = "none";
 
 search.addEventListener("click", () => {
     requestWeather();
     requestImg();
+})
+
+geoLocRequest.addEventListener("click", () => {
+    geoFindMe();
+    loadIcon.style.display = "block";
+    weatherData.style.display = "none";
+
+    let displayBack = () => {
+        loadIcon.style.display = "none";
+        weatherData.style.display = "block";
+    }
+
+    setTimeout(displayBack, 5000)
 })
 
 userInput.addEventListener('keydown', function (event) {
@@ -36,10 +60,10 @@ userInput.addEventListener('keydown', function (event) {
 })
 
 userInput.addEventListener('keyup', function (event) {
-    
+
     if (event.key == ("AltLeft" || "AltRight" || "CapsLock" || "ContextMenu" || "ControlLeft" || "ControlRight" || "MetaLeft" || "MetaRight" || "ShiftLeft" || "Space" || "Tab"))
         return false
-        
+
     else
         requestCityList();
 })
@@ -71,13 +95,14 @@ let requestWeather = () => {
 
         const tempInt = Math.floor(temp)
         const feelLikeInt = Math.floor(feels_like)
+        const speedInt = Math.floor(speed)
 
         cityWeather.textContent = `Weather in ${name}, ${country}`
         tempDisp.textContent = `${tempInt}° C`
         descriptionDisp.textContent = `${description}`
         feelLike.textContent = `Feels like: ${feelLikeInt}° C`
         humidDisp.textContent = `Humidity: ${humidity}%`
-        windDisp.textContent = `Wind speed: ${speed} km/h`
+        windDisp.textContent = `Wind speed: ${speedInt} km/h`
         iconDisp.src = `http://openweathermap.org/img/wn/${icon}.png`
     }
 }
@@ -85,9 +110,9 @@ let requestWeather = () => {
 let requestImg = () => {
 
     let userSearch = userInput.value
-    
-    if (userSearch.includes(",")) 
-    userSearch = userSearch.slice(0, -4)
+
+    if (userSearch.includes(","))
+        userSearch = userSearch.slice(0, -4)
 
     let urlImg = `https://api.unsplash.com/search/photos?client_id=${clientID}&query=${userSearch}&orientation=landscape`
 
@@ -100,6 +125,8 @@ let requestImg = () => {
         .then(data => {
             displayImg(data)
         })
+
+        .catch(error => console.log(error))
 
     let randNumber = Math.floor(Math.random() * 10);
 
@@ -118,22 +145,24 @@ let requestCityList = () => {
             'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
         }
     };
-    
-    let searchURL = `?limit=5&offset=0&namePrefix=${userInput.value}&sort=-population`
 
-    fetch('https://wft-geo-db.p.rapidapi.com/v1/geo/cities'+searchURL, options)
-    
-    .then(response => {
-        return response.json()
-    })
+    let userSearch = userInput.value
 
-    .then(data => {
-        dispCity(data)
-    })
+    let searchURL = `?limit=5&offset=0&namePrefix=${userSearch}&types=CITY&sort=-population`
+
+    fetch('https://wft-geo-db.p.rapidapi.com/v1/geo/cities' + searchURL, options)
+
+        .then(response => {
+            return response.json()
+        })
+
+        .then(data => {
+            dispCity(data)
+        })
+
+        .catch(error => console.log(error))
 
     let dispCity = (data) => {
-        // const { city, countryCode } = data.data[0]
-        // const { href } = data.links[0];
 
         removeDrop();
 
@@ -182,5 +211,95 @@ let requestCityList = () => {
         userInput.value = buttonEl.textContent.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
         removeDrop();
+    }
+}
+
+const geoFindMe = () => {
+
+    const success = (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        const geoLocCall = () => {
+
+            let url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`
+
+            fetch(url)
+
+                .then(response => {
+                    return response.json()
+                })
+
+                .then(data => {
+                    displayWeather(data)
+                })
+
+                .catch(error => console.log(error))
+
+            let displayWeather = (data) => {
+                const { name } = data
+                const { icon, description } = data.weather[0]
+                const { temp, humidity, feels_like } = data.main
+                const { speed } = data.wind
+                const { country } = data.sys
+
+                const tempInt = Math.floor(temp)
+                const feelLikeInt = Math.floor(feels_like)
+                const speedInt = Math.floor(speed)
+
+                cityWeather.textContent = `Weather in ${name}, ${country}`
+                tempDisp.textContent = `${tempInt}° C`
+                descriptionDisp.textContent = `${description}`
+                feelLike.textContent = `Feels like: ${feelLikeInt}° C`
+                humidDisp.textContent = `Humidity: ${humidity}%`
+                windDisp.textContent = `Wind speed: ${speedInt} km/h`
+                iconDisp.src = `http://openweathermap.org/img/wn/${icon}.png`
+            }
+
+            let requestImg = () => {
+
+                let userSearch = cityWeather.textContent
+                userSearch = userSearch.slice(11, -4)
+
+                let urlImg = `https://api.unsplash.com/search/photos?client_id=${clientID}&query=${userSearch}&orientation=landscape`
+
+                fetch(urlImg)
+
+                    .then(response => {
+                        return response.json()
+                    })
+
+                    .then(data => {
+                        displayImg(data)
+                    })
+
+                    .catch(error => console.log(error))
+
+                let randNumber = Math.floor(Math.random() * 10);
+
+                let displayImg = (data) => {
+                    const { raw } = data.results[randNumber].urls
+
+                    backgroundImg.src = `${raw}`;
+                }
+            }
+
+            setTimeout(requestImg, 1000)
+        }
+
+
+
+        setTimeout(geoLocCall, 200)
+    }
+
+    function error() {
+        console.log("Unable to retrieve your location")
+    }
+
+    if (!navigator.geolocation) {
+        console.log("Geolocation is not supported by your browser")
+    } else {
+        console.log("Locating...")
+        navigator.geolocation.getCurrentPosition(success, error);
     }
 }
