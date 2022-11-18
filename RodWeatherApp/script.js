@@ -16,21 +16,28 @@ let apiKey = config.apiWeatherKey;
 let clientID = config.clientUnsplash;
 let geoKey = config.geoDBKey;
 
-const debounce = (f, ms) => {
+loadIcon.style.display = "none";
+
+let debounce = (getCity) => {
     let timeout;
-
     return () => {
-        if (timeout) {
-            clearTimeout(timeout);
-        }
-
+        clearTimeout(timeout)
         timeout = setTimeout(() => {
-            f();
-        }, ms);
+            getCity()
+        }, 600)
     }
 }
 
-loadIcon.style.display = "none";
+const onInputChange = (e) => {
+     
+    if (e.key == ("AltLeft" || "AltRight" || "CapsLock" || "ContextMenu" || "ControlLeft" || "ControlRight" || "MetaLeft" || "MetaRight" || "ShiftLeft" || "Space" || "Tab"))
+        return false
+    
+    else
+        fetchCity()
+}
+
+userInput.addEventListener("input", onInputChange);
 
 search.addEventListener("click", () => {
     requestWeather();
@@ -57,15 +64,6 @@ userInput.addEventListener('keydown', function (event) {
     else
         requestWeather();
         requestImg();
-})
-
-userInput.addEventListener('keyup', function (event) {
-
-    if (event.key == ("AltLeft" || "AltRight" || "CapsLock" || "ContextMenu" || "ControlLeft" || "ControlRight" || "MetaLeft" || "MetaRight" || "ShiftLeft" || "Space" || "Tab"))
-        return false
-
-    else
-        requestCityList();
 })
 
 let requestWeather = () => {
@@ -137,7 +135,10 @@ let requestImg = () => {
     }
 }
 
-let requestCityList = () => {
+let cityNames = [];
+
+let fetchCity = debounce(
+async function requestCityList() {
     const options = {
         method: 'GET',
         headers: {
@@ -146,72 +147,56 @@ let requestCityList = () => {
         }
     };
 
+    removeDrop();
+
     let userSearch = userInput.value
 
     let searchURL = `?limit=5&offset=0&namePrefix=${userSearch}&types=CITY&sort=-population`
 
-    fetch('https://wft-geo-db.p.rapidapi.com/v1/geo/cities' + searchURL, options)
+    const response = await fetch('https://wft-geo-db.p.rapidapi.com/v1/geo/cities' + searchURL, options)
 
-        .then(response => {
-            return response.json()
-        })
+    const data = await response.json()
 
-        .then(data => {
-            dispCity(data)
-        })
+    cityNames = data.data.map((myCity) => {
+        return myCity.city + ", " + myCity.countryCode;
+    })
 
-        .catch(error => console.log(error))
+    createDrop(cityNames);
+})
 
-    let dispCity = (data) => {
 
-        removeDrop();
+let createDrop = (list) => {
+    const listEl = document.createElement("ul");
+    listEl.className = "autocompleteList";
+    listEl.id = "autocompleteList";
 
-        let cityNames = []
+    list.forEach((oneCity) => {
+        const listItem = document.createElement("li");
+        const cityButton = document.createElement("button");
 
-        cityNames = data.data.map((myCity) => {
-            return myCity.city + ", " + myCity.countryCode;
-        })
+        cityButton.innerHTML = oneCity;
+        cityButton.addEventListener("click", onButtonClick)
+        listItem.appendChild(cityButton);
 
-        console.log(cityNames)
+        listEl.appendChild(listItem);
+    })
 
-        createDrop(cityNames);
-    }
+    const autocomp = document.getElementById("autocomp");
+    autocomp.appendChild(listEl);
 
-    let createDrop = (list) => {
-        const listEl = document.createElement("ul");
-        listEl.className = "autocompleteList";
-        listEl.id = "autocompleteList";
+    if (userInput.value.trim().length === 0)
+        listEl.style.display = "none"
+}
 
-        list.forEach((oneCity) => {
-            const listItem = document.createElement("li");
-            const cityButton = document.createElement("button");
+let removeDrop = () => {
+    const listEl = document.getElementById("autocompleteList");
+    if (listEl)
+        listEl.remove();
+}
 
-            cityButton.innerHTML = oneCity;
-            cityButton.addEventListener("click", onButtonClick)
-            listItem.appendChild(cityButton);
-
-            listEl.appendChild(listItem);
-        })
-
-        const autocomp = document.getElementById("autocomp");
-        autocomp.appendChild(listEl);
-
-        if (userInput.value.trim().length === 0)
-            listEl.style.display = "none"
-    }
-
-    let removeDrop = () => {
-        const listEl = document.getElementById("autocompleteList");
-        if (listEl)
-            listEl.remove();
-    }
-
-    function onButtonClick(e) {
-        const buttonEl = e.target;
-        userInput.value = buttonEl.textContent.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
-        removeDrop();
-    }
+function onButtonClick(e) {
+    const buttonEl = e.target;
+    userInput.value = buttonEl.textContent.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
 const geoFindMe = () => {
