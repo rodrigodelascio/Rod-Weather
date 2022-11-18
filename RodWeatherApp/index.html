@@ -19,15 +19,27 @@
     <div class="card">
 
         <div class="searchArea">
-            <input type="text" id="userInput" placeholder="Search for city, country..." autocomplete="off">
-            <button id="search"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <input type="text" id="userInput" placeholder="Search for city, country code (UK, US, BR)..." autocomplete="off">
+            <div id="tooltip">
+                
+                <button id="search"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <span id="tooltipTextOne">Search</span>
+
+                <button id="geoLocRequest"><i class="fa-solid fa-location-dot"></i></button>
+                <span id="tooltipTextTwo">Current location</span>
+                
+            </div>
+
         </div>
 
         <div id="autocomp">
-
+        
+        <div id="loadIcon">
+            <div class="lds-ripple"><div></div><div></div></div>
         </div>
 
-        <div class="weatherInfo">
+        <div id="weatherData">
+            <div class="weatherInfo">
             <h2 id="cityWeather">Weather in -</h2>
             <h1 id="tempDisp"> -° C</h1>
 
@@ -39,8 +51,6 @@
             <div id="feelLike">Feels like: -° C</div>
             <div id="humidDisp">Humidity: -</div>
             <div id="windDisp">Wind speed: -</div>
-
-            <div id="notificationElement"></div>
         </div>
 
         </img>
