@@ -19,12 +19,13 @@
     <div class="card">
 
         <div class="searchArea">
-            <input type="text" id="userInput" placeholder="Search for city, country code (UK, US, BR)..." autocomplete="off">
-            
+            <input type="text" id="userInput" placeholder="Search for city, country code (UK, US, BR)..."
+                autocomplete="off">
+
             <div id="autocomp"></div>
-            
+
             <div id="tooltip">
-                
+
                 <button id="search"><i class="fa-solid fa-magnifying-glass"></i></button>
                 <span id="tooltipTextOne">Search</span>
 
@@ -34,32 +35,35 @@
             </div>
 
         </div>
-        
+
         <div id="loadIcon">
-            <div class="lds-ripple"><div></div><div></div></div>
+            <div class="lds-ripple">
+                <div></div>
+                <div></div>
+            </div>
         </div>
 
         <div id="weatherData">
             <div class="weatherInfo">
-            <h2 id="cityWeather">Weather in -</h2>
-            <h1 id="tempDisp"> -° C</h1>
+                <h2 id="cityWeather">-, -</h2>
+                <h1 id="tempDisp"> -° C</h1>
 
-            <div class="flexDesc">
-                <img src="" alt="" id="iconDisp"></img>
-                <div id="descriptionDisp">-</div>
+                <div class="flexDesc">
+                    <img src="" alt="" id="iconDisp"></img>
+                    <div id="descriptionDisp">-</div>
+                </div>
+
+                <div id="feelLike">Feels like: -° C</div>
+                <div id="humidDisp">Humidity: -</div>
+                <div id="windDisp">Wind speed: -</div>
             </div>
 
-            <div id="feelLike">Feels like: -° C</div>
-            <div id="humidDisp">Humidity: -</div>
-            <div id="windDisp">Wind speed: -</div>
+            </img>
+
         </div>
 
-        </img>
-
-    </div>
-
-    <script type='text/javascript' src='../RodWeatherApp/config.js'></script>
-    <script src="../RodWeatherApp/script.js"></script>
+        <script type='text/javascript' src='../RodWeatherApp/config.js'></script>
+        <script src="../RodWeatherApp/script.js"></script>
 </body>
 
 </html>
