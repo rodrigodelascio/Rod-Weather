@@ -105,36 +105,26 @@ let requestWeather = () => {
     }
 }
 
-let requestImg = () => {
+async function requestImg() {
 
     let userSearch = userInput.value
 
     if (userSearch.includes(","))
         userSearch = userSearch.slice(0, -4)
 
-    let urlImg = `https://api.unsplash.com/search/photos?client_id=${clientID}&query=${userSearch}&orientation=landscape&per_page=30`
+    let urlImg = `https://api.unsplash.com/search/photos?client_id=${clientID}&query=${userSearch}&orientation=landscape&per_page=20`
 
+    const response = await fetch(urlImg)
 
-    fetch(urlImg)
+    const data = await response.json()
 
-        .then(response => {
-            return response.json()
-        })
+    let multiInt = data.results.length - 1
 
-        .then(data => {
-            console.log(data)
-            displayImg(data)
-        })
+    let randNumber = Math.floor(Math.random() * multiInt);
 
-        .catch(error => console.log(error))
+    let displayImg = data.results[randNumber].urls.regular
 
-    let randNumber = Math.floor(Math.random() * 10);
-
-    let displayImg = (data) => {
-        const { raw } = data.results[randNumber].urls
-
-        backgroundImg.src = `${raw}`;
-    }
+    backgroundImg.src = `${displayImg}`
 }
 
 let cityNames = [];
@@ -245,38 +235,30 @@ const geoFindMe = () => {
                 iconDisp.src = `http://openweathermap.org/img/wn/${icon}.png`
             }
 
-            let requestImg = () => {
+
+            async function requestImg() {
 
                 let userSearch = cityWeather.textContent
                 userSearch = userSearch.slice(11, -4)
 
-                let urlImg = `https://api.unsplash.com/search/photos?client_id=${clientID}&query=${userSearch}&orientation=landscape`
+                let urlImg = `https://api.unsplash.com/search/photos?client_id=${clientID}&query=${userSearch}&orientation=landscape&per_page=20`
 
-                fetch(urlImg)
 
-                    .then(response => {
-                        return response.json()
-                    })
+                const response = await fetch(urlImg)
 
-                    .then(data => {
-                        displayImg(data)
-                    })
+                const data = await response.json()
 
-                    .catch(error => console.log(error))
+                let multiInt = data.results.length - 1
 
-                let randNumber = Math.floor(Math.random() * 10);
+                let randNumber = Math.floor(Math.random() * multiInt);
 
-                let displayImg = (data) => {
-                    const { raw } = data.results[randNumber].urls
+                let displayImg = data.results[randNumber].urls.regular
 
-                    backgroundImg.src = `${raw}`;
-                }
+                backgroundImg.src = `${displayImg}`
             }
 
             setTimeout(requestImg, 1000)
         }
-
-
 
         setTimeout(geoLocCall, 200)
     }

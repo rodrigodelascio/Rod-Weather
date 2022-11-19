@@ -19,8 +19,8 @@ body {
     z-index: 1;
     position: fixed;
     opacity: 65%;
-    max-height: 200%;
-    max-width: 300%;
+    min-height: 100%;
+    min-width: 100%;
 }
 
 #logo {
@@ -90,12 +90,12 @@ body {
     left: 75%;
 }
 
-#search:hover + #tooltipTextOne {
+#search:hover+#tooltipTextOne {
     visibility: visible;
     opacity: 1;
 }
 
-#geoLocRequest:hover + #tooltipTextTwo {
+#geoLocRequest:hover+#tooltipTextTwo {
     visibility: visible;
     opacity: 1;
 }
