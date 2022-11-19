@@ -16,21 +16,28 @@ let apiKey = config.apiWeatherKey;
 let clientID = config.clientUnsplash;
 let geoKey = config.geoDBKey;
 
-const debounce = (f, ms) => {
+loadIcon.style.display = "none";
+
+let debounce = (getCity) => {
     let timeout;
-
     return () => {
-        if (timeout) {
-            clearTimeout(timeout);
-        }
-
+        clearTimeout(timeout)
         timeout = setTimeout(() => {
-            f();
-        }, ms);
+            getCity()
+        }, 600)
     }
 }
 
-loadIcon.style.display = "none";
+const onInputChange = (e) => {
+
+    if (e.key == ("AltLeft" || "AltRight" || "CapsLock" || "ContextMenu" || "ControlLeft" || "ControlRight" || "MetaLeft" || "MetaRight" || "ShiftLeft" || "Space" || "Tab"))
+        return false
+
+    else
+        fetchCity()
+}
+
+userInput.addEventListener("input", onInputChange);
 
 search.addEventListener("click", () => {
     requestWeather();
@@ -56,16 +63,7 @@ userInput.addEventListener('keydown', function (event) {
 
     else
         requestWeather();
-        requestImg();
-})
-
-userInput.addEventListener('keyup', function (event) {
-
-    if (event.key == ("AltLeft" || "AltRight" || "CapsLock" || "ContextMenu" || "ControlLeft" || "ControlRight" || "MetaLeft" || "MetaRight" || "ShiftLeft" || "Space" || "Tab"))
-        return false
-
-    else
-        requestCityList();
+    requestImg();
 })
 
 let requestWeather = () => {
@@ -84,7 +82,7 @@ let requestWeather = () => {
             displayWeather(data)
         })
 
-        .catch(error => console.log(error))
+        .catch(error => errorReload())
 
     let displayWeather = (data) => {
         const { name } = data
@@ -114,7 +112,8 @@ let requestImg = () => {
     if (userSearch.includes(","))
         userSearch = userSearch.slice(0, -4)
 
-    let urlImg = `https://api.unsplash.com/search/photos?client_id=${clientID}&query=${userSearch}&orientation=landscape`
+    let urlImg = `https://api.unsplash.com/search/photos?client_id=${clientID}&query=${userSearch}&orientation=landscape&per_page=30`
+
 
     fetch(urlImg)
 
@@ -123,6 +122,7 @@ let requestImg = () => {
         })
 
         .then(data => {
+            console.log(data)
             displayImg(data)
         })
 
@@ -137,81 +137,70 @@ let requestImg = () => {
     }
 }
 
-let requestCityList = () => {
-    const options = {
-        method: 'GET',
-        headers: {
-            'X-RapidAPI-Key': geoKey,
-            'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
-        }
-    };
+let cityNames = [];
 
-    let userSearch = userInput.value
-
-    let searchURL = `?limit=5&offset=0&namePrefix=${userSearch}&types=CITY&sort=-population`
-
-    fetch('https://wft-geo-db.p.rapidapi.com/v1/geo/cities' + searchURL, options)
-
-        .then(response => {
-            return response.json()
-        })
-
-        .then(data => {
-            dispCity(data)
-        })
-
-        .catch(error => console.log(error))
-
-    let dispCity = (data) => {
+let fetchCity = debounce(
+    async function requestCityList() {
+        const options = {
+            method: 'GET',
+            headers: {
+                'X-RapidAPI-Key': geoKey,
+                'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
+            }
+        };
 
         removeDrop();
 
-        let cityNames = []
+        let userSearch = userInput.value
+
+        let searchURL = `?limit=5&offset=0&namePrefix=${userSearch}&types=CITY&sort=-population`
+
+        const response = await fetch('https://wft-geo-db.p.rapidapi.com/v1/geo/cities' + searchURL, options)
+
+        const data = await response.json()
 
         cityNames = data.data.map((myCity) => {
             return myCity.city + ", " + myCity.countryCode;
         })
 
-        console.log(cityNames)
-
         createDrop(cityNames);
-    }
+    })
 
-    let createDrop = (list) => {
-        const listEl = document.createElement("ul");
-        listEl.className = "autocompleteList";
-        listEl.id = "autocompleteList";
 
-        list.forEach((oneCity) => {
-            const listItem = document.createElement("li");
-            const cityButton = document.createElement("button");
+let createDrop = (list) => {
+    const listEl = document.createElement("ul");
+    listEl.className = "autocompleteList";
+    listEl.id = "autocompleteList";
 
-            cityButton.innerHTML = oneCity;
-            cityButton.addEventListener("click", onButtonClick)
-            listItem.appendChild(cityButton);
+    list.forEach((oneCity) => {
+        const listItem = document.createElement("li");
+        const cityButton = document.createElement("button");
 
-            listEl.appendChild(listItem);
-        })
+        cityButton.innerHTML = oneCity;
+        cityButton.addEventListener("click", onButtonClick)
+        listItem.appendChild(cityButton);
 
-        const autocomp = document.getElementById("autocomp");
-        autocomp.appendChild(listEl);
+        listEl.appendChild(listItem);
+    })
 
-        if (userInput.value.trim().length === 0)
-            listEl.style.display = "none"
-    }
+    const autocomp = document.getElementById("autocomp");
+    autocomp.appendChild(listEl);
 
-    let removeDrop = () => {
-        const listEl = document.getElementById("autocompleteList");
-        if (listEl)
-            listEl.remove();
-    }
+    if (userInput.value.trim().length === 0)
+        listEl.style.display = "none"
+}
 
-    function onButtonClick(e) {
-        const buttonEl = e.target;
-        userInput.value = buttonEl.textContent.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+let removeDrop = () => {
+    const listEl = document.getElementById("autocompleteList");
+    if (listEl)
+        listEl.remove();
+}
 
-        removeDrop();
-    }
+function onButtonClick(e) {
+    const buttonEl = e.target;
+    userInput.value = buttonEl.textContent.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    removeDrop();
 }
 
 const geoFindMe = () => {
@@ -302,4 +291,9 @@ const geoFindMe = () => {
         console.log("Locating...")
         navigator.geolocation.getCurrentPosition(success, error);
     }
+}
+
+const errorReload = () => {
+    alert("City not found, try again!")
+    location.reload()
 }
