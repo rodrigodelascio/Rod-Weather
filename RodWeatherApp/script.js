@@ -29,10 +29,10 @@ let debounce = (getCity) => {
 }
 
 const onInputChange = (e) => {
-     
+
     if (e.key == ("AltLeft" || "AltRight" || "CapsLock" || "ContextMenu" || "ControlLeft" || "ControlRight" || "MetaLeft" || "MetaRight" || "ShiftLeft" || "Space" || "Tab"))
         return false
-    
+
     else
         fetchCity()
 }
@@ -63,7 +63,7 @@ userInput.addEventListener('keydown', function (event) {
 
     else
         requestWeather();
-        requestImg();
+    requestImg();
 })
 
 let requestWeather = () => {
@@ -82,7 +82,7 @@ let requestWeather = () => {
             displayWeather(data)
         })
 
-        .catch(error => console.log(error))
+        .catch(error => errorReload())
 
     let displayWeather = (data) => {
         const { name } = data
@@ -112,7 +112,8 @@ let requestImg = () => {
     if (userSearch.includes(","))
         userSearch = userSearch.slice(0, -4)
 
-    let urlImg = `https://api.unsplash.com/search/photos?client_id=${clientID}&query=${userSearch}&orientation=landscape`
+    let urlImg = `https://api.unsplash.com/search/photos?client_id=${clientID}&query=${userSearch}&orientation=landscape&per_page=30`
+
 
     fetch(urlImg)
 
@@ -121,6 +122,7 @@ let requestImg = () => {
         })
 
         .then(data => {
+            console.log(data)
             displayImg(data)
         })
 
@@ -138,31 +140,31 @@ let requestImg = () => {
 let cityNames = [];
 
 let fetchCity = debounce(
-async function requestCityList() {
-    const options = {
-        method: 'GET',
-        headers: {
-            'X-RapidAPI-Key': geoKey,
-            'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
-        }
-    };
+    async function requestCityList() {
+        const options = {
+            method: 'GET',
+            headers: {
+                'X-RapidAPI-Key': geoKey,
+                'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
+            }
+        };
 
-    removeDrop();
+        removeDrop();
 
-    let userSearch = userInput.value
+        let userSearch = userInput.value
 
-    let searchURL = `?limit=5&offset=0&namePrefix=${userSearch}&types=CITY&sort=-population`
+        let searchURL = `?limit=5&offset=0&namePrefix=${userSearch}&types=CITY&sort=-population`
 
-    const response = await fetch('https://wft-geo-db.p.rapidapi.com/v1/geo/cities' + searchURL, options)
+        const response = await fetch('https://wft-geo-db.p.rapidapi.com/v1/geo/cities' + searchURL, options)
 
-    const data = await response.json()
+        const data = await response.json()
 
-    cityNames = data.data.map((myCity) => {
-        return myCity.city + ", " + myCity.countryCode;
+        cityNames = data.data.map((myCity) => {
+            return myCity.city + ", " + myCity.countryCode;
+        })
+
+        createDrop(cityNames);
     })
-
-    createDrop(cityNames);
-})
 
 
 let createDrop = (list) => {
@@ -197,6 +199,8 @@ let removeDrop = () => {
 function onButtonClick(e) {
     const buttonEl = e.target;
     userInput.value = buttonEl.textContent.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    removeDrop();
 }
 
 const geoFindMe = () => {
@@ -287,4 +291,9 @@ const geoFindMe = () => {
         console.log("Locating...")
         navigator.geolocation.getCurrentPosition(success, error);
     }
+}
+
+const errorReload = () => {
+    alert("City not found, try again!")
+    location.reload()
 }

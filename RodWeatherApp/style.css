@@ -100,7 +100,8 @@ body {
     opacity: 1;
 }
 
-.searchArea button {
+#search,
+#geoLocRequest {
     margin: 0.3rem;
     border-radius: 50%;
     border: none;
@@ -113,14 +114,15 @@ body {
     transition: all 0.2s ease-in-out;
 }
 
-.searchArea button:hover {
+#search:hover,
+#geoLocRequest:hover {
     cursor: pointer;
     box-shadow: 0 0 2px #FAF9F62b;
     border: 1px solid #FAF9F62b;
     background-color: #f7f7f74b;
 }
 
-.searchArea input {
+#userInput {
     border: none;
     outline: none;
     margin-right: 0.3rem;
@@ -139,7 +141,7 @@ body {
     opacity: 50%;
 }
 
-.searchArea input:focus {
+#userInput:focus {
     box-shadow: 0 0 2px #FAF9F64b;
     border: 1px solid #FAF9F64b;
 }
@@ -147,12 +149,13 @@ body {
 #autocomp ul {
     list-style: none;
     padding: unset;
-    margin-top: -225px;
-    margin-left: 1.2rem;
+    margin-left: -325px;
+    margin-top: 17.6px;
     display: flex;
     flex-direction: column;
-    position: fixed;
+    position: absolute;
     border: none;
+
 }
 
 #autocomp button {
