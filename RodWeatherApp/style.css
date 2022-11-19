@@ -269,3 +269,107 @@ body {
 }
 
 /* Loading ends */
+
+/* -------------------------------------------------- */
+
+/* Media queries start */
+
+@media (max-width: 520px){
+    .card {
+        max-width: 380px;
+    }
+
+    #logo {
+        width: 350px;
+        margin-bottom: 1.5rem;
+    }
+
+    #autocomp ul {
+        margin-left: -270px;
+        margin-top: 19px;
+    }
+
+    #autocomp button {
+        width: 80%;
+    }
+}
+
+@media (max-width: 470px){
+    .card {
+        max-width: 320px;
+    }
+
+    #logo {
+        width: 300px;
+        margin-bottom: 1.2rem;
+    }
+
+    #autocomp ul {
+        margin-left: -210px;
+        margin-top: 19px;
+    }
+
+    #autocomp button {
+        width: 60%;
+        font-size: 70%;
+    }
+}
+
+@media (max-width: 411px){
+    .card {
+        max-width: 280px;
+    }
+
+    #logo {
+        width: 260px;
+        margin-bottom: 1rem;
+    }
+
+    #autocomp ul {
+        margin-left: -175px;
+        margin-top: 19px;
+    }
+
+    #autocomp button {
+        width: 50%;
+        font-size: 60%;
+    }
+}
+
+@media (max-width: 360px){
+    .card {
+        max-width: 260px;
+    }
+
+    #logo {
+        width: 230px;
+        margin-bottom: 0.5rem;
+    }
+
+    #autocomp ul {
+        margin-left: -153px;
+        margin-top: 19px;
+    }
+
+    #autocomp button {
+        width: 43%;
+        font-size: 45%;
+    }
+}
+
+@media (max-width: 280px){
+    .card {
+        max-width: 200px;
+    }
+
+    #logo {
+        width: 180px;
+        margin-bottom: 0.1rem;
+    }
+
+    #autocomp ul {
+        display: none;
+    }
+}
+
+/* Media queries end */

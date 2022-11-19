@@ -95,7 +95,7 @@ let requestWeather = () => {
         const feelLikeInt = Math.floor(feels_like)
         const speedInt = Math.floor(speed)
 
-        cityWeather.textContent = `Weather in ${name}, ${country}`
+        cityWeather.textContent = `${name}, ${country}`
         tempDisp.textContent = `${tempInt}° C`
         descriptionDisp.textContent = `${description}`
         feelLike.textContent = `Feels like: ${feelLikeInt}° C`
@@ -226,7 +226,7 @@ const geoFindMe = () => {
                 const feelLikeInt = Math.floor(feels_like)
                 const speedInt = Math.floor(speed)
 
-                cityWeather.textContent = `Weather in ${name}, ${country}`
+                cityWeather.textContent = `${name}, ${country}`
                 tempDisp.textContent = `${tempInt}° C`
                 descriptionDisp.textContent = `${description}`
                 feelLike.textContent = `Feels like: ${feelLikeInt}° C`
@@ -239,7 +239,7 @@ const geoFindMe = () => {
             async function requestImg() {
 
                 let userSearch = cityWeather.textContent
-                userSearch = userSearch.slice(11, -4)
+                userSearch = userSearch.slice(0, -4)
 
                 let urlImg = `https://api.unsplash.com/search/photos?client_id=${clientID}&query=${userSearch}&orientation=landscape&per_page=20`
 
@@ -257,7 +257,7 @@ const geoFindMe = () => {
                 backgroundImg.src = `${displayImg}`
             }
 
-            setTimeout(requestImg, 1000)
+            setTimeout(requestImg, 2500)
         }
 
         setTimeout(geoLocCall, 200)
