@@ -3,7 +3,7 @@
 ## Table of contents
 
 - [Overview](#overview)
-- [The purpose](#the-challenge)
+- [The purpose](#the-purpose)
 - [Screenshot](#screenshot)
 - [Link](#links)
 - [Built with](#built-with)
