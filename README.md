@@ -1,5 +1,3 @@
-# RodWeather
-
 ![](./RodWeatherApp/images/rodWeatherLogo.png)
 
 ## Table of contents
