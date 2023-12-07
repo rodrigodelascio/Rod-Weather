@@ -3,18 +3,17 @@
 ## Table of contents
 
 - [Overview](#overview)
-  - [The purpose](#the-challenge)
-  - [Screenshot](#screenshot)
-  - [Link](#links)
-- [My process](#my-process)
-  - [Built with](#built-with)
+- [The purpose](#the-challenge)
+- [Screenshot](#screenshot)
+- [Link](#links)
+- [Built with](#built-with)
 - [Author](#author)
 
 ## Overview
 
 Access current weather data for any location on Earth with images from chosen city displayed in the background.
 
-### The purpose
+## The purpose
 
 Users should be able to:
 
@@ -24,15 +23,15 @@ Users should be able to:
 - The autocomplete function should help users find specific locations
 - The geo location button should display weather information for the user's current location
 
-### Screenshot
+## Screenshot
 
 ![](./RodWeatherApp/images/rodWeatherShowcase.png)
 
-### Link
+## Link
 
 - Live Site URL: [Follow this link](https://rodrigodelascio.github.io/RodWeather/)
 
-### Built with
+## Built with
 
 - HTML
 - CSS
