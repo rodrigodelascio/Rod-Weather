@@ -1,4 +1,4 @@
-# RodWeather 🌦️
+# RodWeather
 
 RodWeather is a weather application built during my early stages as a developer, focused on working with external APIs, user input, and dynamic UI updates using Vanilla JavaScript.
 
